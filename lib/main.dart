@@ -1,4 +1,5 @@
-import 'package:chatapp/screens/splash_screen.dart';
+import 'package:chatapp/screens/onboarding/onboarding_screen.dart';
+import 'package:chatapp/screens/signup/signup_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: SignUp(),
     );
   }
 }
