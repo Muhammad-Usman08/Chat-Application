@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-Widget button(String buttonText, double width, double height) {
-  return (Container(
-    margin: const EdgeInsets.only(top: 100),
+Widget button(String buttonText, double width, double height,
+    void Function()? onpressed) {
+  return (SizedBox(
     width: width,
     height: height,
     child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onpressed,
         style: const ButtonStyle(
           backgroundColor: WidgetStatePropertyAll(Color(0xffEC2578)),
           shape: WidgetStatePropertyAll(

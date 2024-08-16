@@ -1,9 +1,9 @@
 import 'package:chatapp/components/button.dart';
-import 'package:chatapp/screens/onboarding/onboarding2_screen.dart';
+import 'package:chatapp/screens/signup/signup_view.dart';
 import 'package:flutter/material.dart';
 
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
+class Onboarding2Screen extends StatelessWidget {
+  const Onboarding2Screen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +13,13 @@ class OnboardingScreen extends StatelessWidget {
         children: [
           Center(
               child: Image.asset(
-            'assets/product.png',
+            'assets/fastfood.png',
             width: 400,
           )),
           Container(
             margin: const EdgeInsets.only(top: 100, bottom: 20),
             child: const Text(
-              'Track your Comfort \nFood here',
+              'Foodie is Where Your \nComfort Food Resides',
               style: TextStyle(
                 fontSize: 25,
                 fontWeight: FontWeight.w600,
@@ -28,7 +28,7 @@ class OnboardingScreen extends StatelessWidget {
             ),
           ),
           const Text(
-            'Here You Can find a chef or dish for every \ntaste and color. Enjoy!',
+            'Enjoy a fast and smooth food delivery at \nyour doorstep',
             style: TextStyle(fontSize: 13, color: Color(0xff646464)),
             textAlign: TextAlign.center,
           ),
@@ -36,9 +36,7 @@ class OnboardingScreen extends StatelessWidget {
               margin: const EdgeInsets.only(top: 100),
               child: button('Next', 150, 45, () {
                 Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const Onboarding2Screen()));
+                    context, MaterialPageRoute(builder: (context) => SignUp()));
               })),
         ],
       ),

@@ -1,7 +1,24 @@
+import 'dart:async';
+
+import 'package:chatapp/screens/onboarding/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
+class SplashScreen extends StatefulWidget {
+  SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  // ignore: must_call_super
+  void initState() {
+    Timer(const Duration(seconds: 2), () {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const OnboardingScreen()));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

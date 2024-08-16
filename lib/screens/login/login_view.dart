@@ -1,13 +1,12 @@
 import 'package:chatapp/components/button.dart';
 import 'package:chatapp/components/textField/textfield.dart';
-import 'package:chatapp/screens/login/login_view.dart';
+import 'package:chatapp/screens/signup/signup_view.dart';
 import 'package:flutter/material.dart';
 
-class SignUp extends StatelessWidget {
-  SignUp({super.key});
+class LoginScreen extends StatelessWidget {
+  LoginScreen({super.key});
 
   // Controllers
-  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -76,20 +75,12 @@ class SignUp extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text(
-                        'Sign Up',
+                        'Login',
                         style: TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 20),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 25, bottom: 20),
-                        child: Textfield(
-                          text: 'Name',
-                          controller: nameController,
-                          icon: const Icon(Icons.person),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 20),
                         child: Textfield(
                           text: 'Email',
                           controller: emailController,
@@ -106,7 +97,7 @@ class SignUp extends StatelessWidget {
                       ),
                       Container(
                         child: button(
-                          'Create Account',
+                          'Login',
                           350,
                           50,
                           () {},
@@ -119,17 +110,17 @@ class SignUp extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.only(top: 40, bottom: 10),
                 child: const Text(
-                  'Already have an account',
+                  "Don't have an account",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
+                      MaterialPageRoute(builder: (context) => SignUp()));
                 },
                 child: const Text(
-                  'Login',
+                  'REGISTER',
                   style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
