@@ -1,6 +1,10 @@
+// ignore_for_file: avoid_print
+
 import 'package:chatapp/components/button.dart';
 import 'package:chatapp/components/textField/textfield.dart';
+import 'package:chatapp/screens/home/home_view.dart';
 import 'package:chatapp/screens/signup/signup_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -9,6 +13,24 @@ class LoginScreen extends StatelessWidget {
   // Controllers
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+
+  login(context) async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text, password: passwordController.text);
+      print(credential);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+    emailController.clear();
+    passwordController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +122,9 @@ class LoginScreen extends StatelessWidget {
                           'Login',
                           350,
                           50,
-                          () {},
+                          () {
+                            login(context);
+                          },
                         ),
                       ),
                     ],

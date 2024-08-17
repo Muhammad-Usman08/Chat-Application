@@ -1,15 +1,72 @@
+// ignore_for_file: avoid_print
 import 'package:chatapp/components/button.dart';
 import 'package:chatapp/components/textField/textfield.dart';
+import 'package:chatapp/screens/home/home_view.dart';
 import 'package:chatapp/screens/login/login_view.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class SignUp extends StatelessWidget {
-  SignUp({super.key});
+// ignore: must_be_immutable
+class SignUp extends StatefulWidget {
+  const SignUp({super.key});
 
+  @override
+  State<SignUp> createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
   // Controllers
   final TextEditingController nameController = TextEditingController();
+
   final TextEditingController emailController = TextEditingController();
+
   final TextEditingController passwordController = TextEditingController();
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  //signUp
+  signUp(context) async {
+    try {
+      final credential = await auth.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      if (credential.user != null) {
+        await addData();
+        // Navigate to HomeScreen
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      // Clear text controllers regardless of success or failure
+      nameController.clear();
+      emailController.clear();
+      passwordController.clear();
+    }
+  }
+
+  addData() async {
+    try {
+      await firestore.collection('users').add({
+        'name': nameController.text,
+        'email': emailController.text,
+      });
+      print('User added');
+    } catch (error) {
+      print('Error adding user: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +166,9 @@ class SignUp extends StatelessWidget {
                           'Create Account',
                           350,
                           50,
-                          () {},
+                          () {
+                            signUp(context);
+                          },
                         ),
                       ),
                     ],
