@@ -23,6 +23,7 @@ class _SignUpState extends State<SignUp> {
 
   final TextEditingController passwordController = TextEditingController();
 
+  //firebase instance
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -37,8 +38,8 @@ class _SignUpState extends State<SignUp> {
       if (credential.user != null) {
         await addData();
         // Navigate to HomeScreen
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {

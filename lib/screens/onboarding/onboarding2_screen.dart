@@ -35,8 +35,8 @@ class Onboarding2Screen extends StatelessWidget {
           Container(
               margin: const EdgeInsets.only(top: 100),
               child: button('Next', 150, 45, () {
-                Navigator.pushReplacement(
-                    context, MaterialPageRoute(builder: (context) => SignUp()));
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => const SignUp()));
               })),
         ],
       ),
