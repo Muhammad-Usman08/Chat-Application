@@ -59,7 +59,7 @@ class _SignUpState extends State<SignUp> {
 
   addData() async {
     try {
-      await firestore.collection('users').add({
+      await firestore.collection('users').doc(auth.currentUser?.uid).set({
         'name': nameController.text,
         'email': emailController.text,
       });

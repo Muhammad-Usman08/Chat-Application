@@ -1,82 +1,107 @@
+import 'package:chatapp/components/button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  bool isLoading = false;
+  Map? userMap;
 
-  //get Users
-  Future getData() async {
-    var users = firestore.collection('users');
-    return users.get();
+  //controllers
+  TextEditingController search = TextEditingController();
+
+  //search function
+  onSearch() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    Future.delayed(const Duration(seconds: 3), () {
+      if (userMap == null) {
+        setState(() {
+          isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('User not found'),
+          ),
+        );
+      }
+    });
+
+    await firestore
+        .collection('users')
+        .where('email', isEqualTo: search.text)
+        .get()
+        .then((value) {
+      if (value.docs.isNotEmpty) {
+        setState(() {
+          userMap = value.docs[0].data();
+          isLoading = false;
+        });
+      } else {
+        setState(() {
+          userMap = null;
+        });
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue[500],
         title: const Text(
           'Chat',
-          style: TextStyle(fontWeight: FontWeight.w600),
+          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
         ),
       ),
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FutureBuilder(
-                future: getData(),
-                builder: (BuildContext build, AsyncSnapshot snapShot) {
-                  if (snapShot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapShot.data.docs.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          margin: const EdgeInsets.only(bottom: 30),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: const Color.fromARGB(255, 220, 212, 212),
-                              width: 1.0,
-                            ),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: ListTile(
-                            leading: const CircleAvatar(
-                              radius: 30,
-                              child: Icon(
-                                Icons.person,
-                                size: 30,
-                              ),
-                            ),
-                            title: Text(
-                              '${snapShot.data!.docs[index]['name']}',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18),
-                            ),
-                            subtitle: Text(
-                              '${snapShot.data!.docs[index]['email']}',
-                              style: const TextStyle(fontSize: 13),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              children: [
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                  child: TextField(
+                    controller: search,
+                    decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 23),
+                        border: InputBorder.none,
+                        fillColor: Colors.grey[300],
+                        filled: true,
+                        hintText: 'Enter email for which you want to chat',
+                        prefixIcon: const Icon(Icons.email)),
+                  ),
+                ),
+                button('Search', 130, 40, () {
+                  onSearch();
+                }),
+                userMap != null
+                    ? Container(
+                        margin: const EdgeInsets.only(top: 30),
+                        child: ListTile(
+                          leading: const Icon(Icons.person),
+                          title: Text(userMap?['name']),
+                          subtitle: Text(userMap?['email']),
+                          trailing: const Icon(Icons.chat),
+                        ),
+                      )
+                    : Container(),
+              ],
+            ),
     );
   }
 }
